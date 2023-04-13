@@ -24,7 +24,9 @@ class ViewController: UIViewController {
     var ketQua = 0
     
     @IBAction func btnCalculator(_ sender: UIButton) {
+        
         lblHienThiKetQua.text! += sender.titleLabel!.text!
+        
         if (sender.titleLabel?.text! == "C"){
             lblHienThiKetQua.text! = ""
         }
@@ -47,11 +49,13 @@ class ViewController: UIViewController {
                             lblHienThiKetQua.text! += sender.titleLabel!.text!
                         }else {
                             soThuNhatDangChuoi += lblHienThiKetQua.text!
-                //           lts.remove(at:lts.index(before:lts.endIndex));
+                            // gán giá trị nhập từ bàn phím vào chuỗi soThuNhatDangChuoi
                             soThuNhatDangChuoi.remove(at: soThuNhatDangChuoi.index(before: soThuNhatDangChuoi.endIndex))
+                            // cắt phần tử cuối cùng: tức là cắt dấu phép tính mình vừa nhập
                             lblHienThiKetQua.text! = ""
+                            // reset lại chuỗi mình vừa nhập về giá trị rỗng
                             soThuNhatDangSo = Int(soThuNhatDangChuoi) ?? 0
-                            print("so thu nhat la: \(soThuNhatDangSo)")
+                            // chuyển đổi kiểu dạng String sang Int
                             dangOTrangThaiSo2 = true
                         }
         }
