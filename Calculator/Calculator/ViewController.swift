@@ -7,21 +7,32 @@
 
 import UIKit
 
+extension UIButton {
+    func applyCornerRadius() {
+        layer.cornerRadius = 30
+        clipsToBounds = true
+        setTitleColor(.white, for: .normal)
+        titleLabel?.font = UIFont.boldSystemFont(ofSize: 20)
+    }
+}
+
 class ViewController: UIViewController {
     @IBOutlet weak var lblHienThiKetQua: UILabel!
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+        applyCornerRadiusToButtonsInView(view)
+        lblHienThiKetQua.textColor = .white
+        lblHienThiKetQua.font = UIFont.boldSystemFont(ofSize: 60)
     }
     
     var soThuNhatDangChuoi = ""
-    var soThuNhatDangSo = 0
+    var soThuNhatDangSo = 0.0
     var soThuHaiDangChuoi = ""
-    var soThuHaiDangSo = 0
+    var soThuHaiDangSo = 0.0
     var dangOTrangThaiSo2 = false
     var phepTinh = ""
-    var ketQua = 0
+    var ketQua: Double = 0
     
     @IBAction func btnCalculator(_ sender: UIButton) {
         
@@ -29,6 +40,22 @@ class ViewController: UIViewController {
         
         if (sender.titleLabel?.text! == "C"){
             lblHienThiKetQua.text! = ""
+        }
+        
+        if sender.titleLabel?.text! == "+/-" {
+            // Toggle the sign of the current operand
+            if dangOTrangThaiSo2 {
+                if lblHienThiKetQua.text!.hasPrefix("-") {
+                    lblHienThiKetQua.text!.removeFirst()
+                } else {
+                    lblHienThiKetQua.text! = "-" + lblHienThiKetQua.text!
+                }
+            } else {
+                soThuNhatDangSo *= -1
+                lblHienThiKetQua.text! = "-" //"\(soThuNhatDangSo)"
+            }
+        } else {
+            // Existing code for other buttons
         }
 
         if sender.titleLabel?.text! == "+" {
@@ -49,13 +76,9 @@ class ViewController: UIViewController {
                             lblHienThiKetQua.text! += sender.titleLabel!.text!
                         }else {
                             soThuNhatDangChuoi += lblHienThiKetQua.text!
-                            // gán giá trị nhập từ bàn phím vào chuỗi soThuNhatDangChuoi
                             soThuNhatDangChuoi.remove(at: soThuNhatDangChuoi.index(before: soThuNhatDangChuoi.endIndex))
-                            // cắt phần tử cuối cùng: tức là cắt dấu phép tính mình vừa nhập
                             lblHienThiKetQua.text! = ""
-                            // reset lại chuỗi mình vừa nhập về giá trị rỗng
-                            soThuNhatDangSo = Int(soThuNhatDangChuoi) ?? 0
-                            // chuyển đổi kiểu dạng String sang Int
+                            soThuNhatDangSo = Double(soThuNhatDangChuoi) ?? 0
                             dangOTrangThaiSo2 = true
                         }
         }
@@ -64,8 +87,7 @@ class ViewController: UIViewController {
         if sender.titleLabel?.text! == "="{
             soThuHaiDangChuoi += lblHienThiKetQua.text!
             soThuHaiDangChuoi.remove(at: soThuHaiDangChuoi.index(before: soThuHaiDangChuoi.endIndex))
-            soThuHaiDangSo = Int(soThuHaiDangChuoi) ?? 0
-            print("so thu hai la: \(soThuHaiDangSo)")
+            soThuHaiDangSo = Double(soThuHaiDangChuoi) ?? 0
             tinh(phepTinh: phepTinh)
             soThuNhatDangChuoi = ""
             soThuHaiDangChuoi = ""
@@ -96,5 +118,15 @@ class ViewController: UIViewController {
         soThuNhatDangSo = ketQua
         dangOTrangThaiSo2 = false
     }
+    func applyCornerRadiusToButtonsInView(_ view: UIView) {
+        for subview in view.subviews {
+            if let button = subview as? UIButton {
+                button.applyCornerRadius()
+            } else {
+                applyCornerRadiusToButtonsInView(subview)
+            }
+        }
+    }
+
 }
 
